@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+	</head>
+	<body>
+		<form id="form">
+			<input id="input" type="text" placeholder="type a massage..." />
+			<button type="submit">send</button>
+		</form>
+		<ul id="msg-ul"></ul>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			let form = document.querySelector('#form')
+			let input = document.querySelector('#input')
+			let msgUl = document.querySelector('#msg-ul')
+			let socket = io()
+			form.addEventListener('submit', e => {
+				e.preventDefault()
+				socket.emit('snd-msg', input.value)
+				input.value = ''
+			})
+			input.addEventListener('change', _ => {
+				socket.emit('someone-typing', 'someone-typing....')
+			})
+			socket.on('brodcast-msg', msg => {
+				console.log(msg)
+				let li = document.createElement('li')
+				li.textContent = msg
+				msgUl.appendChild(li)
+			})
+		</script>
+	</body>
+</html>
